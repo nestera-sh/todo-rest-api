@@ -3,56 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Checklist</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-
-
-
 
 <body>
 <div th:switch="${tasks}">
    <h2 th:case="null">No tasks for now!</h2>
     <div th:case="*">
         <h2>Checklist</h2>
+
+        <p><a href="/task-create">Create task</a></p>
+
+        <p><a th:href="@{/task-delete-all}">Delete all the tasks</a></p>
+
         <table>
             <thead>
-            <tr>
+            <!-- <tr>
                <th>id</th>
                <th>title</th>
                <th>comment</th>
                 <th>done</th>
-            </tr>
+            </tr>-->
             </thead>
 
             <tbody>
             <tr th:each="task : ${tasks}">
 
-                <td th:text="${task.id}"></td>
-                <td th:text="${task.title}"></td>
-                <td th:text="${task.comment}"></td>
-                <td>
-                    <form th:action="@{/task-done/{id}(id=${task.id})}" method="post">
-                        <input type="checkbox"
-                               th:checked="${task.isDone}"
-                               onchange="this.form.submit()"/>
+                <!-- <td th:text="${task.id}"></td>-->
+                 <td th:text="${task.title}"></td>
+                 <td class="comment" th:text="${task.comment}"></td>
+                 <td>
+                     <form th:action="@{/task-done/{id}(id=${task.id})}" method="post">
+                         <input type="checkbox"
+                                th:checked="${task.isDone}"
+                                onchange="this.form.submit()"/>
 
 
-                    </form>
+                     </form>
 
 
-                </td>
+                 </td>
 
-                <td><a th:href="@{task-update/{id}(id=${task.id})}">Edit</a></td>
-                <td><a th:href="@{task-delete/{id}(id=${task.id})}">Delete</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+                 <td><a th:href="@{task-update/{id}(id=${task.id})}">Edit</a></td>
+                 <td><a th:href="@{task-delete/{id}(id=${task.id})}">Delete</a></td>
+             </tr>
+             </tbody>
+         </table>
+     </div>
 
 
-    <p><a href="/task-create">Create task</a></p>
 
-    <p><a th:href="@{/task-delete-all}">Delete all the tasks</a></p>
 
-</div>
-</body>
-</html>
+ </div>
+ </body>
+ </html>

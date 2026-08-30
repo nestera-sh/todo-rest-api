@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <meta charset="UTF-8">
 <title>Update user</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <form action="#" th:action="@{/task-update}" th:object="${task}" method="post">
@@ -15,7 +16,7 @@
     <input type="text" th:field="*{comment}" id="comment" placeholder="comment">
     <br/>
     <label for="isDone">Выполнено</label>
-    <input type="checkbox" th:field="*{isDone}" id="isDone" />
+    <input type="checkbox" th:field="*{isDone}" id="isDone"/>
     <br/>
     <input type="submit" value="Update Task">
 </form>
