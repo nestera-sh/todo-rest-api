@@ -4,15 +4,15 @@ package checklist.proto.controller;
 import checklist.proto.model.Task;
 import checklist.proto.service.ChecklistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/api/tasks")
 public class TaskController {
 
     private final ChecklistService taskService;
@@ -24,58 +24,53 @@ public class TaskController {
     }
 
 
-    @GetMapping("/tasks")
-    public String findAll(Model model){
-
-
+    @GetMapping
+    public List<Task> findAll(){
         List<Task> tasks = taskService.findAllSorted();
-        model.addAttribute("tasks", tasks);
-        return "task-list";
+        return tasks;
     };
 
-    @GetMapping("/task-create")
-    public String createTaskForm(Task task){
-
-        return "task-create";
+    @GetMapping("/{id}")
+    public Task getTaskById(@PathVariable Long id){
+        return taskService.findById(id);
     };
 
-    @PostMapping("/task-create")
-    public String createTask(Task task){
 
-        taskService.saveTask(task);
-        return "redirect:/tasks";
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Task createTask(@RequestBody Task task){
+
+        return taskService.saveTask(task);
     }
 
-    @GetMapping("/task-update/{id}")
-    public String updateTaskForm(@PathVariable("id") Long id, Model model){
-        Task task = taskService.findById(id);
-        model.addAttribute("task", task);
-        return "task-update";
+    @PutMapping("/{id}")
+    public Task updateTaskForm(@PathVariable("id") Long id, @RequestBody Task task){
+        Task newTask = taskService.findById(id);
+        newTask.setTitle(task.getTitle());
+        newTask.setComment(task.getComment());
+        newTask.setDone(task.getIsDone());
+        return taskService.saveTask(newTask);
 
     }
 
-    @PostMapping("/task-update")
-    public String updateTask(Task task){
-        taskService.saveTask(task);
-        return "redirect:/tasks";
-    }
-    @PostMapping("/task-done/{id}")
-    public String markAsDone(@PathVariable Long id){
+
+    @PatchMapping("/{id}/toggle")
+    public void markAsDone(@PathVariable Long id){
 
         taskService.markAsDone(taskService.findById(id));
-        return "redirect:/tasks";
     };
     
-    @GetMapping("/task-delete/{id}")
-    public String deleteTaskForm(@PathVariable("id") Long id){
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTaskForm(@PathVariable("id") Long id){
         taskService.deleteById(id);
-        return "redirect:/tasks";
     }
 
-    @GetMapping("/task-delete-all")
-    public String deleteAllTasks(){
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAllTasks(){
         taskService.deleteAllById();
-        return "redirect:/tasks";
+
     }
 
 }

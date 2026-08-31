@@ -1,5 +1,6 @@
 package checklist.proto.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Audited;
@@ -19,7 +20,7 @@ public class Task {
     private String title;
     private String comment;
 
-    @Column(name="done")
+    @JsonProperty("done")
     private Boolean isDone = false;
 
     public void setDone(Boolean done) {
